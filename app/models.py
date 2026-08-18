@@ -39,7 +39,7 @@ class BusinessQuestion(BaseModel):
 
 
 class BusinessQuestionSet(BaseModel):
-    questions: list[BusinessQuestion] = Field(min_length=1, max_length=5)
+    questions: list[BusinessQuestion] = Field(min_length=1, max_length=7)
 
 
 class QueryPair(BaseModel):

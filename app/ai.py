@@ -53,14 +53,14 @@ class AIService:
 
     def questions(self, spec: DimensionalModelSpec):
         try:
-            result = self._parse(BusinessQuestionSet, "Write exactly five concise business questions answerable by both the operational and dimensional models. Do not include SQL or patient values.", spec.model_dump())
+            result = self._parse(BusinessQuestionSet, "Write exactly six concise, materially different business questions tailored to the selected grain. Cover distinct analytical angles: time trend, dimensional breakdown, population reach, ranking, and a grain-specific measure when available. For amount grains include both a financial total and a non-total analysis. For numeric-value grains include a unit-safe value analysis. Avoid six variations of event counts. Exactly one question must combine patient geography with a calendar attribute such as quarter, plus organization when that dimension exists, because answering it operationally requires walking patient and address child tables and deriving calendar parts per row while the dimensional model reads stored dimension columns; give that question the ID events_by_state_and_quarter, events_by_organization_state_and_year, or amount_by_organization_state_and_year so a deterministic fallback query exists. Use stable descriptive IDs. Questions must be answerable by both models. Do not include SQL or patient values.", {"model":spec.model_dump(),"grain":self.catalog_payload[spec.grain_id]})
             return result.questions, True, None
         except Exception as exc:
             return fallback_questions(spec.grain_id), False, str(exc)
 
     def query_pair(self, question_id: str, question: str, spec: DimensionalModelSpec, style: str, op_schema: str, ana_schema: str) -> QueryPair | None:
         try:
-            return self._parse(QueryPair, "Return one SQLite SELECT for each schema that answers the same question. Use only supplied tables/columns. No semicolons, comments, PRAGMA, DDL, DML, ATTACH, or functions that access files. Use LIMIT 20 for detail queries.", {"question_id":question_id,"question":question,"grain":spec.model_dump(),"style":style,"operational_schema":op_schema,"analytical_schema":ana_schema})
+            return self._parse(QueryPair, "Return one SQLite SELECT for each schema that answers the same question. Write each query the way that schema is meant to be queried: the operational query joins the normalized tables it needs, including child tables such as patient_address with is_current=1, and derives calendar parts from the stored timestamp text; the analytical query joins the fact to its dimensions on surrogate keys, reads stored dim_date columns such as year and quarter instead of re-deriving them, and aggregates the fact measures. Format each query across multiple lines: SELECT columns, FROM, each JOIN, WHERE, GROUP BY, ORDER BY, and LIMIT should begin on their own line. Use only supplied tables/columns. No semicolons, comments, PRAGMA, DDL, DML, ATTACH, or functions that access files. Use LIMIT 20 for detail queries.", {"question_id":question_id,"question":question,"grain":spec.model_dump(),"style":style,"operational_schema":op_schema,"analytical_schema":ana_schema})
         except Exception:
             return None
 

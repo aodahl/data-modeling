@@ -57,8 +57,7 @@ AI receives schema metadata and aggregate counts only—never patient row values
 - The operational model optimizes correctness of individual writes: normalized entities, constraints, and minimal redundancy.
 - The dimensional model starts with a business process and an explicit **grain**. Facts record events and measures; dimensions provide descriptive context.
 - A star flattens dimension attributes for convenient reads. A snowflake normalizes selected hierarchies, trading fewer repeated attributes for more joins.
-- Surrogate keys decouple warehouse history from source identifiers.
-- “Slowly changing” describes dimension attributes that change less often than facts arrive. Type 1 overwrites; Type 2 inserts a new surrogate-keyed version and expires the old version so facts retain historically correct context.
+- Surrogate keys decouple warehouse identifiers from source identifiers.
 - This tiny POC demonstrates modeling intent and query shape, not a performance benchmark.
 
 ## Tests
@@ -67,7 +66,7 @@ AI receives schema metadata and aggregate counts only—never patient row values
 pytest -q
 ```
 
-Tests reconcile every supported grain, compare star and snowflake aggregates, verify SCD2 effective-date boundaries, check foreign keys, exercise offline AI fallback, and attack the SQL read-only boundary.
+Tests reconcile every supported grain, compare star and snowflake aggregates, check foreign keys, exercise offline AI fallback, and attack the SQL read-only boundary.
 
-The bundled records are synthetic Synthea output. The guided patient move and later encounter are visibly simulated because the source export is a point-in-time snapshot.
+The bundled records are synthetic Synthea output.
 
