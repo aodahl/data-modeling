@@ -35,6 +35,28 @@ docker run --rm -p 8000:8000 \
   --env-file .env modeling-lab
 ```
 
+### Docker Compose
+
+Save this as `compose.yaml` and run `docker compose up --build`:
+
+```yaml
+services:
+  modeling-lab:
+    build: .
+    image: modeling-lab
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    # For an external dataset, mount it read-only and point SYNTHEA_FHIR_PATH at it.
+    # volumes:
+    #   - /path/to/fhir:/fhir:ro
+    # environment:
+    #   SYNTHEA_FHIR_PATH: /fhir
+```
+
+The container image already declares a `/health` healthcheck, so `docker compose ps` reports the service healthy once the FHIR snapshot is loaded and both models are compiled.
+
 The application intentionally runs one worker because both SQLite databases are named, shared, in-memory databases owned by that process.
 
 ## Architecture and safety boundary

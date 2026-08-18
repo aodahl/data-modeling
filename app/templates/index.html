@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Operational ↔ Analytical Modeling Lab</title><link rel="stylesheet" href="{{ url_for('static',path='style.css') }}"><script src="{{ url_for('static',path='htmx.min.js') }}" defer></script><script src="{{ url_for('static',path='diagram.js') }}" defer></script></head>
+<title>Operational ↔ Analytical Modeling Lab</title><link rel="stylesheet" href="/static/style.css"><script src="/static/htmx.min.js" defer></script><script src="/static/diagram.js" defer></script></head>
 <body hx-boost="true" hx-target="body" hx-swap="outerHTML"><header><div><span class="eyebrow">POC</span><h1>Operational ↔ Analytical<br>Modeling Lab</h1><p>One synthetic healthcare dataset. Two deliberately different models.</p></div><div class="status"><b>{{ s.counts.patient }}</b> patients · <b>{{ s.counts.encounter }}</b> encounters · <b>{{ s.counts.observation }}</b> observations<br><span class="pill {{ 'online' if s.ai.enabled else '' }}">AI {{ 'available' if s.ai.enabled else 'offline fallback' }}</span></div></header>
 <main>{% if s.error %}<aside class="error">{{ s.error }}</aside>{% endif %}
 <nav><a href="#source">1 Source</a><a href="#model">2 Model</a><a href="#questions">3 Questions</a><a href="#sql">4 SQL Lab</a></nav>
